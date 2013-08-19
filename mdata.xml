@@ -13,7 +13,7 @@
       <dependency name="boot-file" grouping="exclude_all" restart_on="refresh" type="path">
         <service_fmri value="file://localhost/tmp/.FIRST_REBOOT_NOT_YET_COMPLETE"/>
       </dependency>
-      <exec_method type="method" name="start" exec="/var/svc/mdata-fetch" timeout_seconds="60" />
+      <exec_method type="method" name="start" exec="/var/svc/mdata-fetch" timeout_seconds="1800" />
       <exec_method type="method" name="stop" exec=":true" timeout_seconds="60" />
     </instance>
     <instance name="execute" enabled="false">
