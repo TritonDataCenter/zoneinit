@@ -1,3 +1,5 @@
+# Copyright 2013, Joyent. Inc. All rights reserved.
+
 log "setting hostname, IPs and resolvers"
 
 echo "${HOSTNAME}" > /etc/nodename

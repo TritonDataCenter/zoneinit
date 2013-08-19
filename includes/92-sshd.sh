@@ -1,3 +1,5 @@
+# Copyright 2013, Joyent. Inc. All rights reserved.
+
 # Old style SSH host keys were stored under /etc/ssh and needed to be
 # recreated using /lib/svc/method/sshd -c.
 #

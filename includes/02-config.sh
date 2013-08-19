@@ -1,3 +1,5 @@
+# Copyright 2013, Joyent. Inc. All rights reserved.
+
 log "determine machine parameters and configuration"
 
 # Little helper to overcome the problem that mdata-get doesn't use stderr

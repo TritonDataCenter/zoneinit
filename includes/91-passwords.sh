@@ -1,3 +1,5 @@
+# Copyright 2013, Joyent. Inc. All rights reserved.
+
 for _HASHTOOL in /usr/lib/cryptpass $(type -p genbfpw); do
   if [ -x ${_HASHTOOL} ]; then
     HASHTOOL=${_HASHTOOL/genbfpw/genbfpw -p}

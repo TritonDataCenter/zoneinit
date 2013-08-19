@@ -1,3 +1,5 @@
+# Copyright 2013, Joyent. Inc. All rights reserved.
+
 log "cleaning up"
 
 svcadm disable zoneinit

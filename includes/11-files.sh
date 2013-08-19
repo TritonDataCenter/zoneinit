@@ -1,3 +1,5 @@
+# Copyright 2013, Joyent. Inc. All rights reserved.
+
 log "cleaning files"
 
 if [ -e /var/log/auth.log ]; then
