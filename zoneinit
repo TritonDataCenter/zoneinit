@@ -32,7 +32,7 @@ ZONECONFIG=/root/zoneconfig
 
 if [[ ! "${SMF_METHOD}" == "start" ]] || \
    [[ ! -e /var/svc/provisioning ]] || \
-   [[ $(svcprop -p application/done) =~ true ]]; then
+   [[ $(svcprop -p application/done zoneinit) =~ true ]]; then
   exit ${SMF_EXIT_OK}
 fi
 
