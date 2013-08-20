@@ -8,6 +8,9 @@ export PATH
 set -o errexit
 set -o xtrace
 
+. /lib/svc/share/smf_include.sh
+smf_is_globalzone && exit ${SMF_EXIT_OK}
+
 # Set basedir and default config file
 ZONEINIT_INCLUDES=@PKG_SYSCONFDIR@
 ZONECONFIG=/root/zoneconfig
@@ -19,11 +22,19 @@ ZONECONFIG=/root/zoneconfig
 #
 # Otherwise, pretend success but do nothing
 #
+
 # Pre-create /var/svc/provisioning if /root/zoneconfig exists
 # to stay backwards compatible.
 
 [ -e ${ZONECONFIG} ] && touch /var/svc/provisioning
-[ "${SMF_METHOD}" == "start" ] && [ -e /var/svc/provisioning ] || exit 0
+
+# Do nothing if not under SMF, not provisioning, or already done.
+
+if [[ ! "${SMF_METHOD}" == "start" ]] || \
+   [[ ! -e /var/svc/provisioning ]] || \
+   [[ $(svcprop -p application/done) =~ true ]]; then
+  exit ${SMF_EXIT_OK}
+fi
 
 function log {
   local WHERE=$(basename ${INC-zoneinit})
@@ -43,7 +54,7 @@ function exit_handler {
     [ -e /var/svc/provisioning ] && mv /var/svc/provision{ing,_failure}
 
     # Status 95 tells the SMF restarter to fail fatally (not try again)
-    exit 95
+    exit ${SMF_EXIT_ERR_FATAL}
   fi
 }
 
@@ -68,4 +79,4 @@ fi
 
 # provisioner takes over
 log "(finish)"
-exit 0
+exit ${SMF_EXIT_OK}
