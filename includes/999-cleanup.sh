@@ -2,9 +2,9 @@
 
 log "cleaning up"
 
+svccfg -s zoneinit 'setprop application/done = true'
 svcadm disable zoneinit
-svccfg delete -f zoneinit
-rm -rf ${ZONECONFIG} ${BASE}/*
+rm -f ${ZONECONFIG}
 
 log "scheduling an immediate reboot"
 echo "reboot >/dev/null" | at now >/dev/null
