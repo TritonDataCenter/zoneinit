@@ -13,7 +13,7 @@
       <dependency name="boot-file" grouping="exclude_all" restart_on="refresh" type="path">
         <service_fmri value="file://localhost/tmp/.FIRST_REBOOT_NOT_YET_COMPLETE"/>
       </dependency>
-      <exec_method type="method" name="start" exec="@PREFIX@/libexec/mdata-fetch" timeout_seconds="1800" />
+      <exec_method type="method" name="start" exec="@PREFIX@/@SMF_METHOD_FILE.mdata-fetch@" timeout_seconds="1800" />
       <exec_method type="method" name="stop" exec=":true" timeout_seconds="60" />
     </instance>
     <instance name="execute" enabled="false">
@@ -23,7 +23,7 @@
       <dependency name="mdata" grouping="require_all" restart_on="error" type="service">
         <service_fmri value="svc:/smartdc/mdata:fetch" />
       </dependency>
-      <exec_method type="method" name="start" exec="@PREFIX@/libexec/mdata-execute" timeout_seconds="300" />
+      <exec_method type="method" name="start" exec="@PREFIX@/@SMF_METHOD_FILE.mdata-execute@" timeout_seconds="300" />
       <exec_method type="method" name="stop" exec=":true" timeout_seconds="60" />
     </instance>
     <stability value="Evolving" />
