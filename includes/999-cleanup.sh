@@ -3,6 +3,7 @@
 log "cleaning up"
 
 svccfg -s zoneinit 'setprop application/done = true'
+svcadm refresh zoneinit
 rm -f ${ZONECONFIG}
 
 log "scheduling an immediate reboot"
