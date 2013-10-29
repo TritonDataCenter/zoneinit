@@ -1,5 +1,5 @@
 {
-  "version": "@PKGVERSION@",
+  "version": "@PKGVERSION_NOREV@",
   "features": {
     "var_svc_provisioning": true,
     "reboot": true
