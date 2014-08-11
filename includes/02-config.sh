@@ -53,8 +53,9 @@ if [ ! ${USE_ZONECONFIG} ]; then
   done
 
   # Pick a valid IP for either of the public/private vars, fall back to localhost
-  PUBLIC_IP=${PUBLIC_IPS[0]-${PRIVATE_IPS[0]-127.0.0.1}}
-  PRIVATE_IP=${PRIVATE_IPS[0]-${PUBLIC_IPS[0]-127.0.0.1}}
+  PUBLIC_IP="${PUBLIC_IPS[0]}"
+  PRIVATE_IP="${PRIVATE_IPS[0]}"
+  LOCAL_IP="$(ifconfig lo0 | awk '{if ($1=="inet") print $2}')"
   
 else
 
