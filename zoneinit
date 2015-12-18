@@ -63,8 +63,9 @@ trap 'exit_handler "received exit status" $?' EXIT
 START_TIME=$(date +%s)
 log "(start)"
 
-log "disabling SSH service"
-/usr/sbin/svcadm disable ssh
+log "temporarily disabling SSH"
+
+/usr/sbin/svcadm disable -t ssh
 
 # Pull in and execute all operations from the 'includes' directory
 for INC in ${ZONEINIT_INCLUDES}/*.sh
