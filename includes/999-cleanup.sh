@@ -1,5 +1,9 @@
 # Copyright 2013, Joyent. Inc. All rights reserved.
 
+log "making sure that SSH service is enabled"
+
+/usr/sbin/svcadm enable ssh
+
 log "cleaning up"
 
 svccfg -s zoneinit 'setprop application/done = true'
