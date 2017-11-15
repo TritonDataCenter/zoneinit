@@ -1,4 +1,5 @@
-# Copyright 2013, Joyent. Inc. All rights reserved.
+#!/usr/bin/env bash
+# Copyright (c) 2017, Joyent, Inc.
 
 for _HASHTOOL in /usr/lib/cryptpass $(type -p genbfpw); do
   if [ -x ${_HASHTOOL} ]; then

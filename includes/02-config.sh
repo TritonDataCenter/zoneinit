@@ -1,4 +1,5 @@
-# Copyright 2013, Joyent. Inc. All rights reserved.
+#!/usr/bin/env bash
+# Copyright (c) 2017, Joyent, Inc.
 
 log "determine machine parameters and configuration"
 
@@ -11,11 +12,11 @@ mdata() {
 log "checking for duplicate IPs"
 
 if ifconfig -a | grep DUP >/dev/null ; then
-  log "provisioned with IP already in use, shutting down."      
-  halt
+	log "provisioned with IP already in use, shutting down."
+	halt
 fi
 
-( [ ${HAS_METADATA} ] && mdata sdc:uuid >/dev/null ) || USE_ZONECONFIG=yes
+mdata sdc:uuid >/dev/null || USE_ZONECONFIG=yes
 
 if [ ! ${USE_ZONECONFIG} ]; then
 
@@ -118,16 +119,14 @@ fi
 USERS=(${USERS})
 
 for USER in ${USERS[@]}; do
-  PASS_VAR_LOWER=${USER}_pw
-  PASS_VAR_UPPER=$(echo ${PASS_VAR_LOWER} | tr '[a-z]' '[A-Z]')
+	PASS_VAR_LOWER=${USER}_pw
+	PASS_VAR_UPPER=$(echo ${PASS_VAR_LOWER} | tr '[a-z]' '[A-Z]')
 
-  if [ ${HAS_METADATA} ]; then
-    USER_PW="$(mdata ${PASS_VAR_LOWER})" || unset USER_PW
-    if [ -n "${USER_PW}" ]; then
-      eval "${PASS_VAR_UPPER}='${USER_PW}'"
-    else
-      unset ${PASS_VAR_UPPER}
-    fi
-  fi
+	USER_PW="$(mdata ${PASS_VAR_LOWER})" || unset USER_PW
+	if [ -n "${USER_PW}" ]; then
+		eval "${PASS_VAR_UPPER}='${USER_PW}'"
+	else
+		unset ${PASS_VAR_UPPER}
+	fi
 done
 

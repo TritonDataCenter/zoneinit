@@ -1,4 +1,5 @@
-# Copyright 2013, Joyent. Inc. All rights reserved.
+#!/usr/bin/env bash
+# Copyright (c) 2017, Joyent, Inc.
 
 # Old style SSH host keys were stored under /etc/ssh and needed to be
 # recreated using /lib/svc/method/sshd -c.
