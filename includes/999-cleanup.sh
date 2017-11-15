@@ -7,9 +7,7 @@ svccfg -s zoneinit 'setprop application/done = true'
 svcadm refresh zoneinit
 rm -f ${ZONECONFIG}
 
-shouldreboot=$(json -f "$ZONEINIT_DIR/zoneinit.json" features.reboot)
-
-if [[ $shouldreboot == true ]] || (($? != 0)); then
+if [[ $ZONE_SHOULD_REBOOT == 'true' ]]; then
 	# Reboot the zone if features.reboot is true, or if the above call
 	# fails to json.  This way, we are backwards-compatible with versions
 	# of zoneinit that do not have zoneinit.json
