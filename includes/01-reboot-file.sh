@@ -5,7 +5,7 @@
 # fails. This way, we are backwards-compatible with versions of zoneinit that
 # do not have zoneinit.json
 shouldreboot=$(json -f "$ZONEINIT_DIR/zoneinit.json" features.reboot)
-if [[ $shouldreboot == true ]] || (($? != 0)); then
+if (($? != 0)) || [[ $shouldreboot == true ]]; then
 	ZONE_SHOULD_REBOOT=true
 
 	# create a temporary file that disappears on the first reboot
