@@ -81,7 +81,7 @@ for user in ${USERS[@]}; do
 	PASS_VAR_LOWER=${user}_pw
 	PASS_VAR_UPPER=$(echo "$PASS_VAR_LOWER" | tr '[[:lower:]]' '[[:upper:]]')
 
-	user_pw=$(mdata "$PASS_VAR_LOWER")
+	user_pw=$(mdata "$PASS_VAR_LOWER" || true)
 	if [[ -n $user_pw ]]; then
 		PASSWORDS[$PASS_VAR_UPPER]=$user_pw
 	fi
