@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Copyright (c) 2017, Joyent, Inc.
 
-log "determine machine parameters and configuration"
+log 'determine machine parameters and configuration'
 
 # Little helper to overcome the problem that mdata-get doesn't use stderr
 mdata() {
@@ -14,16 +14,16 @@ mdata() {
 	fi
 }
 
+# List nics
 mdata-nics() {
 	mdata sdc:nics \
-		| json -d '|' -e 'this.ips = this.ips && this.ips.join(",")' \
-		-a interface ip ips nic_tag
+	    | json -d '|' -e 'this.ips = this.ips && this.ips.join(",")' \
+	    -a interface ip ips nic_tag
 }
 
-log "checking for duplicate IPs"
-
+log 'checking for duplicate IPs'
 if ifconfig -a | grep DUP >/dev/null ; then
-	log "provisioned with IP already in use, shutting down."
+	log 'provisioned with IP already in use, shutting down.'
 	halt
 fi
 
@@ -31,26 +31,25 @@ declare -A INTERFACE_IPS
 PUBLIC_IPS=()
 PRIVATE_IPS=()
 
-ZONENAME=$(mdata sdc:zonename)
+ZONENAME=$(mdata sdc:zonename || zonename)
 HOSTNAME=$(mdata sdc:hostname || echo "$ZONENAME")
-DOMAINNAME=$(mdata sdc:dns_domain || echo "local")
+DOMAINNAME=$(mdata sdc:dns_domain || echo 'local')
 
 RAM_IN_BYTES=$(($(mdata sdc:max_physical_memory) * 1024 * 1024))
 SWAP_IN_BYTES=$(($(mdata sdc:max_swap) * 1024 * 1024))
 TMPFS=$(mdata sdc:tmpfs || echo "$((RAM_IN_BYTES/1024/1024))")m
 
 # We want to fail if anything in the pipe fails during this step
-set -o pipefail
-while IFS='|' read -r IFACE IP IPS NIC_TAG; do
-	[[ -z $IPS ]] && IPS=$IP
+while IFS='|' read -r iface ip ips nic_tag; do
+	[[ -z $ips ]] && ips=$ip
 
 	OLDIFS=$IFS
 	IFS=','
-	for this_ip in $IPS; do
+	for this_ip in $ips; do
 		# strip prefix length and only use valid IPv4 addresses
 		[[ "${this_ip%/*}." =~ ^(([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\.){4}$ ]] || continue
-		INTERFACE_IPS[$IFACE]=$this_ip
-		case $NIC_TAG in
+		INTERFACE_IPS[$iface]=$this_ip
+		case "$nic_tag" in
 			external)
 				PUBLIC_IPS+=("$this_ip")
 				;;
@@ -61,7 +60,6 @@ while IFS='|' read -r IFACE IP IPS NIC_TAG; do
 	done
 	IFS=$OLDIFS
 done < <(mdata-nics)
-set +o pipefail
 
 # Pick a valid IP for either of the public/private vars, fall back to localhost
 PUBLIC_IP=${PUBLIC_IPS[0]}
