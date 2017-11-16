@@ -81,3 +81,5 @@ for user in ${USERS[@]}; do
 		PASSWORDS[$PASS_VAR_UPPER]=$user_pw
 	fi
 done
+
+true
