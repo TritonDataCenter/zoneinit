@@ -3,4 +3,9 @@
 
 # Enable the mdata service that fetches the metadata user-script on each boot
 log "enabling metadata agent"
-svcadm enable mdata:fetch
+
+if [[ $ZONE_SHOULD_REBOOT == 'true' ]]; then
+	svcadm enable mdata:fetch
+else
+	svcadm enable -s mdata:fetch
+fi
