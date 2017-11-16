@@ -22,14 +22,16 @@ if ifconfig -a | grep DUP >/dev/null ; then
 	halt
 fi
 
-declare -A PUBLIC_IPS PRIVATE_IPS INTERFACE_IPS
+declare -A INTERFACE_IPS
+PUBLIC_IPS=()
+PRIVATE_IPS=()
 
 ZONENAME=$(mdata sdc:zonename)
 HOSTNAME=$(mdata sdc:hostname || echo "$ZONENAME")
 DOMAINNAME=$(mdata sdc:dns_domain || echo "local")
 
-RAM_IN_BYTES=$(("$(mdata sdc:max_physical_memory)" * 1024 * 1024))
-SWAP_IN_BYTES=$(("$(mdata sdc:max_swap)" * 1024 * 1024))
+RAM_IN_BYTES=$(($(mdata sdc:max_physical_memory) * 1024 * 1024))
+SWAP_IN_BYTES=$(($(mdata sdc:max_swap) * 1024 * 1024))
 TMPFS=$(mdata sdc:tmpfs || echo "$((RAM_IN_BYTES/1024/1024))")m
 
 # We want to fail if anything in the pipe fails during this step
