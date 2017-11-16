@@ -5,7 +5,8 @@ log "determine machine parameters and configuration"
 
 # Little helper to overcome the problem that mdata-get doesn't use stderr
 mdata() {
-	local output=$(mdata-get "$1" 2>/dev/null)
+	local output
+	output=$(mdata-get "$1" 2>/dev/null)
 	if (($? == 0)); then
 		echo "$output"
 	else
