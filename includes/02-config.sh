@@ -5,8 +5,12 @@ log "determine machine parameters and configuration"
 
 # Little helper to overcome the problem that mdata-get doesn't use stderr
 mdata() {
-	set -o pipefail
-	output=$(mdata-get "$1" 2>/dev/null) && echo -e "${output}" || return 1
+	local output=$(mdata-get "$1" 2>/dev/null)
+	if (($? == 0)); then
+		echo "$output"
+	else
+		return 1
+	fi
 }
 
 mdata-nics() {
