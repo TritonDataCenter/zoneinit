@@ -70,8 +70,12 @@ log "(start)"
 
 # Pull in and execute all operations from the 'includes' directory
 for INC in "$ZONEINIT_INCLUDES"/*.sh; do
-	log "(start)"
+	log "(start) $INC"
+	thentime=$(($(date +%s%N) / 1000 / 1000))
 	source "$INC"
+	nowtime=$(($(date +%s%N) / 1000 / 1000))
+	ms=$((nowtime - thentime))
+	log "(finish) $INC - took ${ms}ms"
 done
 unset INC
 
