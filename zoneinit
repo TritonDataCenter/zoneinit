@@ -65,7 +65,7 @@ function exit_handler {
 
 trap 'exit_handler "received exit status" $?' EXIT
 
-START_TIME=$(date +%s)
+START_TIME=$(($(date +%s%N) / 1000 / 1000))
 log "(start)"
 
 # Pull in and execute all operations from the 'includes' directory
@@ -79,9 +79,9 @@ for INC in "$ZONEINIT_INCLUDES"/*.sh; do
 done
 unset INC
 
-END_TIME=$(date +%s)
+END_TIME=$(($(date +%s%N) / 1000 / 1000))
 RUN_TIME=$((END_TIME - START_TIME))
-log "total runtime $RUN_TIME seconds"
+log "total runtime ${RUN_TIME}ms"
 
 # provisioner takes over
 log "(finish)"
