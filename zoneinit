@@ -36,7 +36,7 @@ if [[ $SMF_METHOD != 'start' || \
    ! -e /var/svc/provisioning || \
    "$(svcprop -p application/done zoneinit)" =~ true ]]; then
 
-	exit ${SMF_EXIT_OK}
+	exit "$SMF_EXIT_OK"
 fi
 
 function log {
@@ -48,8 +48,8 @@ function exit_handler {
 	local WHERE=$(basename "${INC-zoneinit}")
 	local EXITCODE=${2:-95}
 
-	if [ ${EXITCODE} -gt 0 ]; then
-		echo "${WHERE}: $1 ${EXITCODE}"
+	if ((EXITCODE != 0)); then
+		echo "$WHERE: $1 $EXITCODE"
 
 		# Renaming 'provisioning' to 'provision_failure' tells the
 		# provisioner that we failed and the machine is no good

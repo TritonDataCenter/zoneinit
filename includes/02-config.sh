@@ -39,7 +39,6 @@ RAM_IN_BYTES=$(($(mdata sdc:max_physical_memory) * 1024 * 1024))
 SWAP_IN_BYTES=$(($(mdata sdc:max_swap) * 1024 * 1024))
 TMPFS=$(mdata sdc:tmpfs || echo "$((RAM_IN_BYTES/1024/1024))")m
 
-# We want to fail if anything in the pipe fails during this step
 while IFS='|' read -r iface ip ips nic_tag; do
 	[[ -z $ips ]] && ips=$ip
 
