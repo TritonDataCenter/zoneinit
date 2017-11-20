@@ -1,10 +1,13 @@
-# Copyright 2013, Joyent. Inc. All rights reserved.
+#!/usr/bin/env bash
+# Copyright (c) 2017, Joyent. Inc.
 
-log "cleaning up"
+log 'cleaning up'
 
 svccfg -s zoneinit 'setprop application/done = true'
 svcadm refresh zoneinit
-rm -f ${ZONECONFIG}
+rm -f "$ZONECONFIG"
 
-log "scheduling an immediate reboot"
-echo "reboot >/dev/null" | at now >/dev/null
+if [[ $ZONE_SHOULD_REBOOT == 'true' ]]; then
+	log 'scheduling an immediate reboot'
+	echo 'reboot >/dev/null' | at now >/dev/null
+fi
