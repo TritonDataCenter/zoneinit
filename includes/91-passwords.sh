@@ -1,38 +1,37 @@
-# Copyright 2013, Joyent. Inc. All rights reserved.
+#!/usr/bin/env bash
+# Copyright (c) 2017, Joyent, Inc.
 
-for _HASHTOOL in /usr/lib/cryptpass $(type -p genbfpw); do
-  if [ -x ${_HASHTOOL} ]; then
-    HASHTOOL=${_HASHTOOL/genbfpw/genbfpw -p}
-    break
-  fi
+for _hashtool in /usr/lib/cryptpass $(type -p genbfpw); do
+	if [[ -x $_hashtool ]]; then
+		hashtool=${_hashtool/genbfpw/genbfpw -p}
+		break
+	fi
 done
 
-for _PASSTOOL in $(type -p changepass); do
-  if [ -x ${_PASSTOOL} ]; then
-    PASSTOOL=${_PASSTOOL}
-    break
-  fi
+for passtool in $(type -p changepass); do
+	if [[ -x $passtool ]]; then
+		passtool=$passtool
+		break
+	fi
 done
 
-for USER in ${USERS[@]}; do
+for user in "${USERS[@]}"; do
+	log "setting system password for user '$user'"
+	pass_var_lower=${user}_pw
+	pass_var_upper=$(echo "$pass_var_lower" | tr '[[:lower:]]' '[[:upper:]]')
+	user_pw=${PASSWORDS[$pass_var_upper]}
 
-  log "setting system password for user '${USER}'"
-  PASS_VAR_LOWER=${USER}_pw
-  PASS_VAR_UPPER=$(echo ${PASS_VAR_LOWER} | tr '[a-z]' '[A-Z]')
-  USER_PW="${!PASS_VAR_UPPER}"
+	if [[ -n $user_pw && -n $hashtool && -n $passtool ]]; then
+		# Make sure it's blowfish-hashed
+		[[ "$user_pw" =~ ^\$2a\$ ]] || user_pw=$("$hashtool" "$user_pw")
 
-  if [ "${USER_PW}" ] && [ "${HASHTOOL}" ] && [ "${PASSTOOL}" ]; then
-
-    # Make sure it's blowfish-hashed
-    [[ "${USER_PW}" =~ ^\$2a\$ ]] || USER_PW=$(${HASHTOOL} "${USER_PW}")
-
-    if echo "${USER}:${USER_PW}" | changepass -e > /dev/null 2>&1; then
-      SSH_ALLOW_PASSWORDS=true
-    else
-      log "system password change for '${USER}' failed"
-      passwd -N ${USER} >/dev/null
-    fi
-  else
-    passwd -N ${USER} >/dev/null
-  fi
+		if echo "$user:$user_pw" | changepass -e &>/dev/null; then
+			SSH_ALLOW_PASSWORDS=true
+		else
+			log "system password change for '$user' failed"
+			passwd -N "$user" >/dev/null
+		fi
+	else
+		passwd -N "$user" >/dev/null
+	fi
 done

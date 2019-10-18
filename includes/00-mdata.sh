@@ -1,17 +1,5 @@
-# Copyright 2013, Joyent. Inc. All rights reserved.
+#!/usr/bin/env bash
+# Copyright (c) 2017, Joyent, Inc.
 
-if [ -x /usr/sbin/mdata-get ]; then
-  HAS_METADATA=yes
-
-  log "waiting for metadata to show up"
-
-  until [ -e /.zonecontrol/metadata.sock ] ||\
-        [ -e /var/run/smartdc/metadata.sock ] ||\
-        [ $((MCOUNT++)) -gt 30 ]; do
-    sleep 1
-  done
-
-  [ -e /.zonecontrol/metadata.sock ] ||\
-  [ -e /var/run/smartdc/metadata.sock ] ||\
-    log "metadata failed to show up"
-fi
+log 'waiting for metadata to show up'
+/usr/vm/sbin/filewait /.zonecontrol/metadata.sock
